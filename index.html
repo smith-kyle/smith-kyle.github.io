@@ -1,0 +1,601 @@
+<html>
+  <head>
+    <!-- START SIGMA IMPORTS -->
+    <script src='js/sigma.core.js'></script>
+    <script src='js/conrad.js'></script>
+    <script src='js/utils/sigma.utils.js'></script>
+    <script src='js/utils/sigma.polyfills.js'></script>
+    <script src='js/sigma.settings.js'></script>
+    <script src='js/classes/sigma.classes.dispatcher.js'></script>
+    <script src='js/classes/sigma.classes.configurable.js'></script>
+    <script src='js/classes/sigma.classes.graph.js'></script>
+    <script src='js/classes/sigma.classes.camera.js'></script>
+    <script src='js/classes/sigma.classes.quad.js'></script>
+    <script src='js/classes/sigma.classes.edgequad.js'></script>
+    <script src='js/captors/sigma.captors.mouse.js'></script>
+    <script src='js/captors/sigma.captors.touch.js'></script>
+    <script src='js/renderers/sigma.renderers.canvas.js'></script>
+    <script src='js/renderers/sigma.renderers.webgl.js'></script>
+    <script src='js/renderers/sigma.renderers.svg.js'></script>
+    <script src='js/renderers/sigma.renderers.def.js'></script>
+    <script src='js/renderers/webgl/sigma.webgl.nodes.def.js'></script>
+    <script src='js/renderers/webgl/sigma.webgl.nodes.fast.js'></script>
+    <script src='js/renderers/webgl/sigma.webgl.edges.def.js'></script>
+    <script src='js/renderers/webgl/sigma.webgl.edges.fast.js'></script>
+    <script src='js/renderers/webgl/sigma.webgl.edges.arrow.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.labels.def.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.hovers.def.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.nodes.def.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edges.def.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edges.curve.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edges.arrow.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edges.curvedArrow.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edgehovers.def.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edgehovers.curve.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edgehovers.arrow.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js'></script>
+    <script src='js/renderers/canvas/sigma.canvas.extremities.def.js'></script>
+    <script src='js/renderers/svg/sigma.svg.utils.js'></script>
+    <script src='js/renderers/svg/sigma.svg.nodes.def.js'></script>
+    <script src='js/renderers/svg/sigma.svg.edges.def.js'></script>
+    <script src='js/renderers/svg/sigma.svg.edges.curve.js'></script>
+    <script src='js/renderers/svg/sigma.svg.labels.def.js'></script>
+    <script src='js/renderers/svg/sigma.svg.hovers.def.js'></script>
+    <script src='js/middlewares/sigma.middlewares.rescale.js'></script>
+    <script src='js/middlewares/sigma.middlewares.copy.js'></script>
+    <script src='js/misc/sigma.misc.animation.js'></script>
+    <script src='js/misc/sigma.misc.bindEvents.js'></script>
+    <script src='js/misc/sigma.misc.bindDOMEvents.js'></script>
+    <script src='js/misc/sigma.misc.drawHovers.js'></script>
+    <script src='js/lodash.min.js'></script>
+    <!-- END SIGMA IMPORTS -->
+    <script src='js/sigma.plugins.animate/sigma.plugins.animate.js'></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <div id='container'></div>
+    <script>
+      var maxPos = 20;
+      words = [
+        {
+          k: {
+            nodes: [
+              {
+                id: 'k0',
+                x: 0,
+                y: 0,
+                'size': 3
+              },
+              {
+                id: 'k1',
+                x: 0,
+                y: maxPos * 0.5,
+                'size': 2
+              },
+              {
+                id: 'k2',
+                x: 0,
+                y: maxPos,
+                'size': 1
+              },
+              {
+                id: 'k3',
+                x: maxPos,
+                y: 0,
+                'size': 3
+              },
+              {
+                id: 'k4',
+                x: maxPos,
+                y: maxPos,
+                'size': 2
+              }
+            ],
+            edges: [
+              {
+                id: 'e0',
+                source: 'k0',
+                target: 'k1'
+              },
+              {
+                id: 'e1',
+                source: 'k1',
+                target: 'k2'
+              },
+              {
+                id: 'e2',
+                source: 'k1',
+                target: 'k3'
+              },
+              {
+                id: 'e3',
+                source: 'k1',
+                target: 'k4'
+              }
+            ]
+          },
+          y: {
+            nodes: [
+              {
+                id: 'y0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'y1',
+                x: maxPos * 0.8,
+                y: 0
+              },
+              {
+                id: 'y2',
+                x: maxPos * 0.4,
+                y: maxPos * 0.4
+              },
+              {
+                id: 'y3',
+                x: maxPos * 0.4,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'e4',
+                source: 'y0',
+                target: 'y2'
+              },
+              {
+                id: 'e5',
+                source: 'y2',
+                target: 'y1'
+              },
+              {
+                id: 'e6',
+                source: 'y2',
+                target: 'y3'
+              }
+            ]
+          },
+          l: {
+            nodes: [
+              {
+                id: 'l0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'l1',
+                x: 0,
+                y: maxPos
+              },
+              {
+                id: 'l2',
+                x: maxPos * .8,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'e7',
+                source: 'l0',
+                target: 'l1'
+              },
+              {
+                id: 'e8',
+                source: 'l1',
+                target: 'l2'
+              }
+            ]
+          },
+          e: {
+            nodes: [
+              {
+                id: 'e0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'e1',
+                x: maxPos,
+                y: 0
+              },
+              {
+                id: 'e2',
+                x: 0,
+                y: maxPos * 0.5
+              },
+              {
+                id: 'e3',
+                x: maxPos,
+                y: maxPos * 0.5
+              },
+              {
+                id: 'e4',
+                x: 0,
+                y: maxPos
+              },
+              {
+                id: 'e5',
+                x: maxPos,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'e9',
+                source: 'e0',
+                target: 'e1'
+              },
+              {
+                id: 'e10',
+                source: 'e0',
+                target: 'e2'
+              },
+              {
+                id: 'e11',
+                source: 'e2',
+                target: 'e3'
+              },
+              {
+                id: 'e12',
+                source: 'e2',
+                target: 'e4'
+              },
+              {
+                id: 'e13',
+                source: 'e4',
+                target: 'e5'
+              }
+            ]
+          }
+        },
+        {
+          s: {
+            nodes: [
+              {
+                id: 's0',
+                x: maxPos,
+                y: maxPos * 0.2
+              },
+              {
+                id: 's1',
+                x: maxPos * 0.5,
+                y: 0
+              },
+              {
+                id: 's2',
+                x: 0,
+                y: maxPos * 0.2
+              },
+              {
+                id: 's3',
+                x: maxPos * 0.5,
+                y: maxPos * 0.5
+              },
+              {
+                id: 's4',
+                x: maxPos,
+                y: maxPos * 0.7
+              },
+              {
+                id: 's5',
+                x: maxPos * 0.5,
+                y: maxPos
+              },
+              {
+                id: 's6',
+                x: 0,
+                y: maxPos * 0.8
+              }
+            ],
+            edges: [
+              {
+                id: 'se0',
+                source: 's0',
+                target: 's1'
+              },
+              {
+                id: 'se1',
+                source: 's1',
+                target: 's2'
+              },
+              {
+                id: 'se2',
+                source: 's2',
+                target: 's3'
+              },
+              {
+                id: 'se3',
+                source: 's3',
+                target: 's4'
+              },
+              {
+                id: 'se4',
+                source: 's4',
+                target: 's5'
+              },
+              {
+                id: 'se5',
+                source: 's5',
+                target: 's6'
+              }
+            ]
+          },
+          m: {
+            nodes: [
+              {
+                id: 'm0',
+                x: 0,
+                y: maxPos
+              },
+              {
+                id: 'm1',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'm2',
+                x: maxPos * 0.5,
+                y: maxPos * 0.5
+              },
+              {
+                id: 'm3',
+                x: maxPos,
+                y: 0
+              },
+              {
+                id: 'm4',
+                x: maxPos,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'me0',
+                source: 'm0',
+                target: 'm1'
+              },
+              {
+                id: 'me1',
+                source: 'm1',
+                target: 'm2'
+              },
+              {
+                id: 'me2',
+                source: 'm2',
+                target: 'm3'
+              },
+              {
+                id: 'me3',
+                source: 'm3',
+                target: 'm4'
+              }
+            ]
+          },
+          i: {
+            nodes: [
+              {
+                id: 'i0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'i1',
+                x: maxPos * 0.5,
+                y: 0
+              },
+              {
+                id: 'i2',
+                x: maxPos,
+                y: 0
+              },
+              {
+                id: 'i3',
+                x: 0,
+                y: maxPos
+              },
+              {
+                id: 'i4',
+                x: maxPos * 0.5,
+                y: maxPos
+              },
+              {
+                id: 'i5',
+                x: maxPos,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'ie0',
+                source: 'i0',
+                target: 'i1'
+              },
+              {
+                id: 'ie1',
+                source: 'i1',
+                target: 'i2'
+              },
+              {
+                id: 'ie2',
+                source: 'i1',
+                target: 'i4'
+              },
+              {
+                id: 'ie3',
+                source: 'i3',
+                target: 'i4'
+              },
+              {
+                id: 'ie4',
+                source: 'i4',
+                target: 'i5'
+              }
+            ]
+          },
+          t: {
+            nodes: [
+              {
+                id: 't0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 't1',
+                x: maxPos * 0.5,
+                y: 0
+              },
+              {
+                id: 't2',
+                x: maxPos,
+                y: 0
+              },
+              {
+                id: 't3',
+                x: maxPos * 0.5,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'te0',
+                source: 't0',
+                target: 't1'
+              },
+              {
+                id: 'te1',
+                source: 't1',
+                target: 't2'
+              },
+              {
+                id: 'te2',
+                source: 't1',
+                target: 't3'
+              }
+            ]
+          },
+          h: {
+            nodes: [
+              {
+                id: 'h0',
+                x: 0,
+                y: 0
+              },
+              {
+                id: 'h1',
+                x: 0,
+                y: maxPos * 0.5
+              },
+              {
+                id: 'h2',
+                x: maxPos,
+                y: 0
+              },
+              {
+                id: 'h3',
+                x: 0,
+                y: maxPos
+              },
+              {
+                id: 'h4',
+                x: maxPos,
+                y: maxPos * 0.5
+              },
+              {
+                id: 'h5',
+                x: maxPos,
+                y: maxPos
+              }
+            ],
+            edges: [
+              {
+                id: 'he0',
+                source: 'h0',
+                target: 'h1'
+              },
+              {
+                id: 'he1',
+                source: 'h1',
+                target: 'h3'
+              },
+              {
+                id: 'he2',
+                source: 'h1',
+                target: 'h4'
+              },
+              {
+                id: 'he3',
+                source: 'h2',
+                target: 'h4'
+              },
+              {
+                id: 'he4',
+                source: 'h4',
+                target: 'h5'
+              }
+            ]
+          }
+        }
+      ];
+
+      var g = {
+        nodes: [],
+        edges: []
+      },
+      s;
+
+      var yOffset;
+      var xOffset = -1 * maxPos;
+      var lineNumber = -1;
+      var marginRight = 5;
+      var marginBottom = 10;
+      _.forEach(words, function(word) {
+        lineNumber++;
+        xOffset = 0;
+        _.forEach(word, function(letter) {
+          xOffset += maxPos + marginRight;
+          yOffset = lineNumber * (maxPos + marginBottom);
+          // Add letter's nodes to graph
+          _.forEach(letter.nodes, function(node) {
+            node.size = 0;
+            node.x += xOffset;
+            node.y += yOffset;
+            node.color = '#ec5148';
+            g.nodes.push(node);
+          });
+
+          // Add letter's edges to graph
+          _.forEach(letter.edges, function(edge) {
+            edge.color = '#ec5148';
+            g.edges.push(edge);
+          });
+        });
+      });
+
+
+      s = new sigma({
+        graph: g,
+        container: 'container'
+      });
+    </script>
+    <div class="links">
+      <ul>
+        <li>
+          <a href="https://github.com/smith-kyle">
+            <i class="fa fa-github"></i>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/SmiffR">
+            <i class="fa fa-twitter"></i>
+          </a>
+        </li>
+        <li>
+          <a href="mailto:kyle.r.smiff@gmail.com">
+            <i class="fa fa-envelope"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
