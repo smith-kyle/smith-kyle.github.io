@@ -1,31 +1,69 @@
 html {
   background-color: #f9f7ed;
   padding: 100px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+a {
+  color: #ec5148;
+  text-decoration: none;
+  -webkit-transition: color 300ms ease-out;
+  -moz-transition: color 300ms ease-out;
+  -o-transition: color 300ms ease-out;
+  transition: color 300ms ease-out;
+}
+
+a:hover{
+  color: #333;
+}
+
+#bio {
+  text-align: center;
+  color: #999;
 }
 
 #container {
-  max-width: 500px;
+  max-width: 700px;
   height: 300px;
   margin: auto;
+  margin-bottom: 50px;
 }
 
 
 .links {
   max-width: 500px;
   margin: auto;
+  margin-top: 50px;
 }
 
 .links ul {
   list-style: none;
+  padding: 0;
 }
 
 .links ul li {
   display: inline-block;
-  margin-right: 30px;
+  width: 30%;
+}
+
+.links ul li a p {
+  text-align: center;
+  margin-top: 4;
+  font-size: 11px;
+  opacity: 0;
+  -webkit-transition: opacity 300ms ease-out;
+  -moz-transition: opacity 300ms ease-out;
+  -o-transition: opacity 300ms ease-out;
+  transition: opacity 300ms ease-out;
+}
+
+.links ul li a:hover p {
+  opacity: 1;
 }
 
 .links i {
+  width: 100%;
+  text-align: center;
   font-size: 30px;
-  padding: 0 20px;
-  color: #ec5148;
+  padding: 0;
 }
