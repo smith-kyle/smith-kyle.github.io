@@ -1,55 +1,8 @@
 <html>
   <head>
-    <!-- START SIGMA IMPORTS -->
-    <script src='js/sigma.core.js'></script>
-    <script src='js/conrad.js'></script>
-    <script src='js/utils/sigma.utils.js'></script>
-    <script src='js/utils/sigma.polyfills.js'></script>
-    <script src='js/sigma.settings.js'></script>
-    <script src='js/classes/sigma.classes.dispatcher.js'></script>
-    <script src='js/classes/sigma.classes.configurable.js'></script>
-    <script src='js/classes/sigma.classes.graph.js'></script>
-    <script src='js/classes/sigma.classes.camera.js'></script>
-    <script src='js/classes/sigma.classes.quad.js'></script>
-    <script src='js/classes/sigma.classes.edgequad.js'></script>
-    <script src='js/captors/sigma.captors.mouse.js'></script>
-    <script src='js/captors/sigma.captors.touch.js'></script>
-    <script src='js/renderers/sigma.renderers.canvas.js'></script>
-    <script src='js/renderers/sigma.renderers.webgl.js'></script>
-    <script src='js/renderers/sigma.renderers.svg.js'></script>
-    <script src='js/renderers/sigma.renderers.def.js'></script>
-    <script src='js/renderers/webgl/sigma.webgl.nodes.def.js'></script>
-    <script src='js/renderers/webgl/sigma.webgl.nodes.fast.js'></script>
-    <script src='js/renderers/webgl/sigma.webgl.edges.def.js'></script>
-    <script src='js/renderers/webgl/sigma.webgl.edges.fast.js'></script>
-    <script src='js/renderers/webgl/sigma.webgl.edges.arrow.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.labels.def.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.hovers.def.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.nodes.def.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edges.def.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edges.curve.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edges.arrow.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edges.curvedArrow.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edgehovers.def.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edgehovers.curve.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edgehovers.arrow.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js'></script>
-    <script src='js/renderers/canvas/sigma.canvas.extremities.def.js'></script>
-    <script src='js/renderers/svg/sigma.svg.utils.js'></script>
-    <script src='js/renderers/svg/sigma.svg.nodes.def.js'></script>
-    <script src='js/renderers/svg/sigma.svg.edges.def.js'></script>
-    <script src='js/renderers/svg/sigma.svg.edges.curve.js'></script>
-    <script src='js/renderers/svg/sigma.svg.labels.def.js'></script>
-    <script src='js/renderers/svg/sigma.svg.hovers.def.js'></script>
-    <script src='js/middlewares/sigma.middlewares.rescale.js'></script>
-    <script src='js/middlewares/sigma.middlewares.copy.js'></script>
-    <script src='js/misc/sigma.misc.animation.js'></script>
-    <script src='js/misc/sigma.misc.bindEvents.js'></script>
-    <script src='js/misc/sigma.misc.bindDOMEvents.js'></script>
-    <script src='js/misc/sigma.misc.drawHovers.js'></script>
+    <script src='js/sigma.min.js'></script>
+    <script src='js/sigma.plugins.animate.min.js'></script>
     <script src='js/lodash.min.js'></script>
-    <!-- END SIGMA IMPORTS -->
-    <script src='js/sigma.plugins.animate/sigma.plugins.animate.js'></script>
     <link rel="stylesheet" type="text/css" href="css/main.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   </head>
@@ -269,21 +222,36 @@
               },
               {
                 id: 's3',
-                x: maxPos * 0.5,
-                y: maxPos * 0.5
+                x: maxPos * 0.25,
+                y: maxPos * 0.35,
               },
               {
                 id: 's4',
+                x: maxPos * 0.5,
+                y: maxPos * 0.48
+              },
+              {
+                id: 's5',
+                x: maxPos * 0.7,
+                y: maxPos * 0.57
+              },
+              {
+                id: 's6',
                 x: maxPos,
                 y: maxPos * 0.7
               },
               {
-                id: 's5',
+                id: 's7',
                 x: maxPos * 0.5,
                 y: maxPos
               },
               {
-                id: 's6',
+                id: 's8',
+                x: maxPos * 0.25,
+                y: maxPos * 0.9
+              },
+              {
+                id: 's9',
                 x: 0,
                 y: maxPos * 0.8
               }
@@ -318,6 +286,21 @@
                 id: 'se5',
                 source: 's5',
                 target: 's6'
+              },
+              {
+                id: 'se6',
+                source: 's6',
+                target: 's7'
+              },
+              {
+                id: 'se7',
+                source: 's7',
+                target: 's8'
+              },
+              {
+                id: 'se8',
+                source: 's8',
+                target: 's9'
               }
             ]
           },
@@ -542,57 +525,102 @@
         nodes: [],
         edges: []
       },
-      s;
+      s,
+      state = 0,
+      n = 0;
 
       var yOffset;
       var xOffset = -1 * maxPos;
       var lineNumber = -1;
-      var marginRight = 5;
-      var marginBottom = 10;
+      var gridIncrement = 3;
+      var MARGIN_RIGHT = 5;
+      var MARGIN_BOTTOM = 20;
+      var isFirst = true;
       _.forEach(words, function(word) {
+        // Increment line number and reset xOffset
         lineNumber++;
-        xOffset = 0;
+        xOffset = (isFirst) ? 10 : 0;
+        isFirst = false;
         _.forEach(word, function(letter) {
-          xOffset += maxPos + marginRight;
-          yOffset = lineNumber * (maxPos + marginBottom);
+          xOffset += maxPos + MARGIN_RIGHT;
+          yOffset = lineNumber * (maxPos + MARGIN_BOTTOM);
           // Add letter's nodes to graph
           _.forEach(letter.nodes, function(node) {
-            node.size = 0;
-            node.x += xOffset;
-            node.y += yOffset;
-            node.color = '#ec5148';
-            g.nodes.push(node);
+            var o = {
+              id: node.id,
+              letter_size: 0,
+              letter_x: node.x + xOffset,
+              letter_y: node.y + yOffset,
+              letter_color: '#ec5148',
+              grid_x: n % (7 * gridIncrement),
+              grid_y: Math.floor(n / (7 * gridIncrement)),
+              grid_color: '#ec5148',
+              grid_size: 0
+            };
+            n += gridIncrement;
+
+            ['x', 'y', 'color', 'size'].forEach(function(val) {
+              o[val] = o['grid_' + val];
+            });
+
+            g.nodes.push(o);
           });
 
           // Add letter's edges to graph
           _.forEach(letter.edges, function(edge) {
-            edge.color = '#ec5148';
+            edge.size = Math.random() * 100;
             g.edges.push(edge);
           });
         });
       });
 
-
       s = new sigma({
         graph: g,
-        container: 'container'
+        container: 'container',
+        settings: {
+          enableCamera: false,
+          enableHovering: false,
+          mouseEnabled: false,
+          drawLabels: false,
+          animationsTime: 1000
+        }
       });
+
+      window.onload = function() {
+        var prefix = 'letter_';
+        sigma.plugins.animate(
+          s,
+          {
+            x: prefix + 'x',
+            y: prefix + 'y',
+            color: prefix + 'color',
+            size: prefix + 'size'
+          }
+        );
+      }
     </script>
+    <p id="bio">
+      I currently work as a software developer on the <a href="http://gitkraken.com">GitKraken</a> team. I like
+      playing guitar and making soda water.
+    </p>
     <div class="links">
       <ul>
         <li>
           <a href="https://github.com/smith-kyle">
             <i class="fa fa-github"></i>
+            <p>GitHub</p>
           </a>
         </li>
         <li>
           <a href="https://twitter.com/SmiffR">
             <i class="fa fa-twitter"></i>
+            <p>Twitter</p>
           </a>
         </li>
         <li>
           <a href="mailto:kyle.r.smiff@gmail.com">
             <i class="fa fa-envelope"></i>
+            <p>Email</p>
           </a>
         </li>
       </ul>
