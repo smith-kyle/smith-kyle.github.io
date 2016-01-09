@@ -17,9 +17,11 @@ a:hover{
   color: #333;
 }
 
-#bio {
+p {
   text-align: center;
   color: #999;
+  width: 80%;
+  margin: auto;
 }
 
 #container {
@@ -64,6 +66,6 @@ a:hover{
 .links i {
   width: 100%;
   text-align: center;
-  font-size: 30px;
+  font-size: 25;
   padding: 0;
 }
