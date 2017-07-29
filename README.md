@@ -1,4 +1,4 @@
-# smith-kyle.com
+# smith-kyle.github.io
 
 A personal website with almost nothing on it.
 
