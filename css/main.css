@@ -17,9 +17,13 @@ a:hover{
   color: #333;
 }
 
+h1 {
+  text-align: center;
+}
+
 p {
   text-align: center;
-  color: #999;
+  color: black;
   width: 80%;
   margin: auto;
   max-width: 800px;
