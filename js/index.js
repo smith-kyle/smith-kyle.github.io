@@ -524,28 +524,14 @@ var lineNumber = -1;
 var gridIncrement = 3;
 var MARGIN_RIGHT = 5;
 var MARGIN_BOTTOM = 20;
-var EXPANDED_SCALE = 0.8;
-var EXPANDED_START_X = 25;
-var EXPANDED_START_Y = 20;
-var EXPANDED_LETTER_SPACING = 6;
-var EXPANDED_WORD_SPACING = 18;
 var isFirst = true;
-var expandedXOffset = EXPANDED_START_X;
-var isFirstExpandedLetter = true;
 _.forEach(words, function(word) {
   // Increment line number and reset xOffset
   lineNumber++;
   xOffset = (isFirst) ? 10 : 0;
   isFirst = false;
-  var isFirstLetterInWord = true;
   _.forEach(word, function(letter) {
     xOffset += maxPos + MARGIN_RIGHT;
-    if (!isFirstExpandedLetter) {
-      expandedXOffset += (maxPos * EXPANDED_SCALE) + EXPANDED_LETTER_SPACING;
-      if (isFirstLetterInWord) {
-        expandedXOffset += EXPANDED_WORD_SPACING;
-      }
-    }
     yOffset = lineNumber * (maxPos + MARGIN_BOTTOM);
     // Add letter's nodes to graph
     _.forEach(letter.nodes, function(node) {
@@ -555,10 +541,6 @@ _.forEach(words, function(word) {
         letter_x: node.x + xOffset,
         letter_y: node.y + yOffset,
         letter_color: '#ec5148',
-        expanded_size: 0,
-        expanded_x: (node.x * EXPANDED_SCALE) + expandedXOffset,
-        expanded_y: (node.y * EXPANDED_SCALE) + EXPANDED_START_Y,
-        expanded_color: '#ec5148',
         grid_x: n % (7 * gridIncrement),
         grid_y: Math.floor(n / (7 * gridIncrement)),
         grid_color: '#ec5148',
@@ -578,9 +560,6 @@ _.forEach(words, function(word) {
       edge.size = Math.random() * 100;
       g.edges.push(edge);
     });
-
-    isFirstExpandedLetter = false;
-    isFirstLetterInWord = false;
   });
 });
 
@@ -609,7 +588,7 @@ function animateTo(prefix) {
 }
 
 function toggleLayout() {
-  state = (state === 'letter_') ? 'expanded_' : 'letter_';
+  state = (state === 'letter_') ? 'grid_' : 'letter_';
   animateTo(state);
 }
 
